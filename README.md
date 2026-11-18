@@ -6,7 +6,7 @@ Serial communication blocks for FPGA: a UART transmitter, a UART receiver and an
 SPI master. Each block has a self-checking testbench that prints PASS or FAIL,
 and GitHub Actions runs all of them on every push.
 
-> Status: work in progress: UART TX, RX, loopback and SPI master done. See [Progress](#progress).
+> Status: all cores done and verified: **2533 automated checks, 0 errors**. See [Results](#results).
 
 ## Architecture
 
@@ -73,12 +73,26 @@ Testbench conventions (the Makefile and CI rely on them):
 
 ## Results
 
-| Testbench | Checks | Errors |
-|---|---|---|
-| `tb_uart_tx` | TBD | TBD |
-| `tb_uart_rx` | TBD | TBD |
-| `tb_loopback` | TBD | TBD |
-| `tb_spi` | TBD | TBD |
+All results come from the CI run on every push (Icarus Verilog, `make sim`).
+
+| Testbench | What it covers | Checks | Errors |
+|---|---|---|---|
+| `tb_uart_tx` | Idle level, frame format, 6 directed + 20 random bytes, busy/done, exact frame length | 497 | 0 |
+| `tb_uart_rx` | 6 directed + 50 random bytes back-to-back, framing-error injection and recovery, 1-clock and quarter-bit glitches | 182 | 0 |
+| `tb_loopback` | `uart_tx` → `uart_rx`, 106 bytes, totals, no framing errors | 214 | 0 |
+| `tb_spi` | All 4 SPI modes against a slave model, `CLK_DIV` = 1–4, 37 full-duplex transfers per mode | 1640 | 0 |
+| **Total** | | **2533** | **0** |
+
+```
+PASS: 497 checks, 0 errors
+PASS: 182 checks, 0 errors
+PASS: 214 checks, 0 errors (106 bytes looped back)
+mode 3 (CPOL=1 CPHA=1 CLK_DIV=1): 410 checks, 0 errors
+mode 0 (CPOL=0 CPHA=0 CLK_DIV=2): 410 checks, 0 errors
+mode 1 (CPOL=0 CPHA=1 CLK_DIV=3): 410 checks, 0 errors
+mode 2 (CPOL=1 CPHA=0 CLK_DIV=4): 410 checks, 0 errors
+PASS: 1640 checks, 0 errors (SPI modes 0-3)
+```
 
 Synthesis (Vivado, optional): TBD LUTs, TBD flip-flops.
 
