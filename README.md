@@ -6,7 +6,7 @@ Serial communication blocks for FPGA: a UART transmitter, a UART receiver and an
 SPI master. Each block has a self-checking testbench that prints PASS or FAIL,
 and GitHub Actions runs all of them on every push.
 
-> Status: work in progress: UART TX, RX and loopback done. See [Progress](#progress).
+> Status: work in progress: UART TX, RX, loopback and SPI master done. See [Progress](#progress).
 
 ## Architecture
 
@@ -28,7 +28,7 @@ and GitHub Actions runs all of them on every push.
 |---|---|---|---|
 | `uart_tx` | 8N1 frame, LSB first, busy/done flags | `CLKS_PER_BIT` | `tx_start`, `tx_data`, `tx`, `tx_busy`, `tx_done` |
 | `uart_rx` | 2-FF input synchroniser, start-bit check, mid-bit sampling, framing-error flag | `CLKS_PER_BIT` | `rx`, `rx_data`, `rx_valid`, `frame_err` |
-| `spi_master` | SPI modes 0–3 (CPOL/CPHA), full duplex, chip select, clock divider | `CLK_DIV`, `CPOL`, `CPHA` | `start`, `data_in`, `data_out`, `sclk`, `mosi`, `miso`, `cs_n`, `done` |
+| `spi_master` | SPI modes 0–3 (CPOL/CPHA), full duplex, MSB first, chip select, clock divider (SCLK = clk / 2·`CLK_DIV`) | `CLK_DIV`, `CPOL`, `CPHA` | `start`, `data_in`, `data_out`, `busy`, `done`, `sclk`, `mosi`, `miso`, `cs_n` |
 
 ## Verification plan
 
@@ -87,7 +87,7 @@ Synthesis (Vivado, optional): TBD LUTs, TBD flip-flops.
 - [x] `uart_tx` + testbench
 - [x] `uart_rx` + testbench + error injection
 - [x] Loopback test + green CI
-- [ ] `spi_master` (4 modes) + slave model + testbench
+- [x] `spi_master` (4 modes) + slave model + testbench
 - [ ] Waveforms and results in `docs/`
 
 ## What I learned
