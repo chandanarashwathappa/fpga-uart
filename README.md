@@ -6,7 +6,7 @@ Serial communication blocks for FPGA: a UART transmitter, a UART receiver and an
 SPI master. Each block has a self-checking testbench that prints PASS or FAIL,
 and GitHub Actions runs all of them on every push.
 
-> Status: work in progress. See [Progress](#progress).
+> Status: work in progress: UART TX and RX done. See [Progress](#progress).
 
 ## Architecture
 
@@ -84,8 +84,8 @@ Synthesis (Vivado, optional): TBD LUTs, TBD flip-flops.
 
 ## Progress
 
-- [ ] `uart_tx` + testbench
-- [ ] `uart_rx` + testbench + error injection
+- [x] `uart_tx` + testbench
+- [x] `uart_rx` + testbench + error injection
 - [ ] Loopback test + green CI
 - [ ] `spi_master` (4 modes) + slave model + testbench
 - [ ] Waveforms and results in `docs/`
